@@ -1,0 +1,5 @@
+-cp ../../src
+-cp .
+-main Simple
+
+-swf ../../bin/flash-simple.swf
