@@ -1,0 +1,7 @@
+# Build Folder
+bin/
+
+# IDE specific
+.idea/
+virtual-display-list.iml
+out/
