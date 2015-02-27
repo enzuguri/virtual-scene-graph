@@ -10,6 +10,8 @@ class VNode<T>
 
     public var key:String;
 
+    public var realNode:T;
+
     // Empty constructor
     public function new(){ }
 }

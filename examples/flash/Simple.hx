@@ -1,8 +1,11 @@
 package;
+
 import impl.flash.DisplayListOperations;
 import flash.display.DisplayObject;
 import flash.Lib;
 import vtree.create.CreateOperations;
+import vtree.diff.DiffOperations;
+import vtree.patch.PatchOperations;
 import flash.text.TextField;
 import flash.display.Sprite;
 import vnode.VNodeFactory;
@@ -12,6 +15,8 @@ class Simple
 {
     var v:VNodeFactory;
     var c:CreateOperations;
+    var d:DiffOperations;
+    var p:PatchOperations;
 
     var currentNode:VNode<Sprite>;
     var rootObject:DisplayObject;
@@ -20,8 +25,11 @@ class Simple
     {
         v = new VNodeFactory();
         c = new CreateOperations(new DisplayListOperations());
-        var node = render(cast {x:0, y:0});
+        d = new DiffOperations();
+        p = new PatchOperations();
+        var node = render(cast {x:0, y:0, text:"Hello World"});
         handleNodeUpdate(node);
+        handleNodeUpdate(render(cast {x:0, y:50, text:"Hello again"}));
     }
 
     function handleNodeUpdate(node:VNode<Sprite>)
@@ -33,7 +41,8 @@ class Simple
         }
         else
         {
-            // TODO: diff implementation
+            var diff = d.diff(currentNode, node);
+            p.patch(diff);
         }
 
         currentNode = node;
@@ -42,7 +51,7 @@ class Simple
     function render(state:ViewState):VNode<Sprite>
     {
         return v.parent(Sprite, {x:state.x, y:state.y}, null, [
-            v.leaf(TextField, {text:"Hello World"}),
+            v.leaf(TextField, {text:state.text}),
             v.leaf(TextField, {y:50, text:"Hello again"})
         ]);
     }
@@ -56,5 +65,6 @@ class Simple
 typedef ViewState =
 {
     x:Float,
-    y:Float
+    y:Float,
+    text:String
 }

@@ -15,11 +15,12 @@ class CreateOperations
     public function create<T>(vNode:VNode<T>):T
     {
         var realNode = opertations.createInstance(vNode.type, vNode.constructArgs);
+        vNode.realNode = realNode;
 
         for (key in Reflect.fields(vNode.properties))
         {
-            var value:Dynamic = Reflect.field(vNode.properties, key);
-            untyped realNode[key] = value;
+            var value:Dynamic = Reflect.getProperty(vNode.properties, key);
+            Reflect.setProperty(realNode, key, value);
         }
 
         if(Std.is(vNode, VParentNode))
